@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}VideoHub — Главная{% endblock %}
+
+{% block content %}
+<div class="page-title">Видео</div>
+<div class="page-subtitle">Смотрите и загружайте видео</div>
+
+<!-- Поиск и сортировка -->
+<div class="toolbar">
+    <form method="get" action="{% url 'home' %}" class="toolbar__search">
+        <input type="text" name="q" value="{{ query }}" class="form-input"
+               placeholder="Поиск по названию...">
+        <input type="hidden" name="sort" value="{{ sort }}">
+        <button type="submit" class="btn btn-secondary">Найти</button>
+        {% if query %}
+        <a href="{% url 'home' %}?sort={{ sort }}" class="btn btn-secondary">Сбросить</a>
+        {% endif %}
+    </form>
+
+    <div style="display:flex;gap:8px;">
+        <a href="?sort=newest{% if query %}&q={{ query }}{% endif %}"
+           class="btn btn-secondary btn-sm {% if sort == 'newest' %}btn-primary{% endif %}">
+           Новые
+        </a>
+        <a href="?sort=popular{% if query %}&q={{ query }}{% endif %}"
+           class="btn btn-secondary btn-sm {% if sort == 'popular' %}btn-primary{% endif %}">
+           Популярные
+        </a>
+    </div>
+</div>
+
+{% if videos %}
+<div class="video-grid">
+    {% for video in videos %}
+    <a href="{% url 'video_detail' video.pk %}" style="text-decoration:none;color:inherit;">
+        <div class="video-card">
+            {% if video.thumbnail %}
+                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" class="video-card__thumb">
+            {% else %}
+                <div class="video-card__thumb-placeholder">НЕТ ПРЕВЬЮ</div>
+            {% endif %}
+            <div class="video-card__body">
+                <div class="video-card__title">{{ video.title }}</div>
+                <div class="video-card__meta">
+                    <span>{{ video.author.username }}</span>
+                    <span>{{ video.views }} просм.</span>
+                    <span>{{ video.upload_date|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty">
+    {% if query %}
+        По запросу "{{ query }}" ничего не найдено.
+    {% else %}
+        Пока нет ни одного видео.
+        {% if user.is_authenticated %}
+        <br><a href="{% url 'video_upload' %}">Загрузить первое видео</a>
+        {% endif %}
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

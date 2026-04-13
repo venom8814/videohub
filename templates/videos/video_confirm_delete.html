@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Удалить видео — VideoHub{% endblock %}
+
+{% block content %}
+<div class="confirm-box">
+    <h2>Удалить видео?</h2>
+    <p>Вы собираетесь удалить видео<br><strong>{{ video.title }}</strong>.<br>Это действие нельзя отменить.</p>
+    <div class="actions">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Отмена</a>
+    </div>
+</div>
+{% endblock %}

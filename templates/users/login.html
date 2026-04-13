@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Вход — VideoHub{% endblock %}
+
+{% block content %}
+<div class="auth-box">
+    <h2>Вход</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="form-errors">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+        <div class="form-errors" style="margin-bottom:12px;">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;">Войти</button>
+    </form>
+    <p style="margin-top:16px;font-size:0.85rem;color:var(--text-muted);">
+        Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+    </p>
+</div>
+{% endblock %}

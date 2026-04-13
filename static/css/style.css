@@ -1,0 +1,429 @@
+/* ======================================
+   VideoHub — Глобальные стили
+   Тема: тёмная, минималистичная
+====================================== */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg:        #0d0d0d;
+    --bg-card:   #1a1a1a;
+    --bg-input:  #111111;
+    --border:    #2e2e2e;
+    --text:      #e8e8e8;
+    --text-muted:#888888;
+    --accent:    #4a7eba;
+    --accent-hv: #3a6da8;
+    --danger:    #8b2e2e;
+    --danger-hv: #a03535;
+    --btn-gray:  #2e2e2e;
+    --btn-gray-hv:#3a3a3a;
+}
+
+html, body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ── Навигационная панель ── */
+.navbar {
+    background: #111;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar__brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+}
+.navbar__brand:hover { text-decoration: none; color: var(--text); }
+
+.navbar__links {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.navbar__links a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.navbar__links a:hover { color: var(--text); text-decoration: none; }
+
+/* ── Контейнер ── */
+.container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+/* ── Сообщения Django ── */
+.messages {
+    list-style: none;
+    margin-bottom: 20px;
+}
+.messages li {
+    background: #1e2a1e;
+    border-left: 3px solid #4caf50;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+.messages li.error {
+    background: #2a1e1e;
+    border-color: #c0392b;
+}
+
+/* ── Карточки видео ── */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.video-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+.video-card:hover { border-color: #444; }
+
+.video-card__thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    background: #111;
+}
+
+.video-card__thumb-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #161616;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.video-card__body {
+    padding: 14px;
+}
+
+.video-card__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.video-card__meta {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    gap: 12px;
+}
+
+/* ── Плеер ── */
+.video-player {
+    width: 100%;
+    border-radius: 6px;
+    background: #000;
+    display: block;
+    max-height: 520px;
+}
+
+/* ── Реакции (лайк / дизлайк) ── */
+.reactions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 16px 0;
+}
+
+.btn-reaction {
+    background: var(--btn-gray);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+}
+.btn-reaction:hover         { background: var(--btn-gray-hv); }
+.btn-reaction.active-like   { border-color: var(--accent); color: var(--accent); }
+.btn-reaction.active-dislike{ border-color: var(--danger);  color: #e07070; }
+
+/* ── Кнопки ── */
+.btn {
+    display: inline-block;
+    padding: 9px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: background 0.15s;
+    text-align: center;
+}
+.btn-primary   { background: var(--accent);   color: #fff; }
+.btn-primary:hover { background: var(--accent-hv); }
+.btn-secondary { background: var(--btn-gray); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--btn-gray-hv); }
+.btn-danger    { background: var(--danger);   color: #fff; }
+.btn-danger:hover { background: var(--danger-hv); }
+.btn-sm { padding: 5px 14px; font-size: 0.82rem; }
+
+/* ── Формы ── */
+.form-group {
+    margin-bottom: 18px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+.form-input, .form-textarea, .form-file {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+.form-textarea { resize: vertical; }
+.form-file { padding: 7px 12px; }
+
+.form-errors {
+    margin-top: 4px;
+    font-size: 0.82rem;
+    color: #e07070;
+}
+
+/* ── Страница видео ── */
+.video-detail__header {
+    margin: 16px 0 8px;
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+.video-detail__meta {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+.video-detail__description {
+    margin: 14px 0 20px;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+}
+
+/* ── Комментарии ── */
+.comments-section { margin-top: 28px; }
+.comments-section h3 {
+    font-size: 1rem;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+}
+.comment {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+}
+.comment__author {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 4px;
+}
+.comment__time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-left: 8px;
+    font-weight: 400;
+}
+.comment__text {
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+}
+
+/* ── Поиск / фильтры ── */
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.toolbar__search {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    min-width: 220px;
+}
+.toolbar__search input {
+    flex: 1;
+}
+
+/* ── Дашборд: таблица ── */
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.dashboard-table th,
+.dashboard-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+}
+.dashboard-table th {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+.dashboard-table tr:hover td { background: var(--bg-card); }
+
+/* ── Профиль ── */
+.profile-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    flex-shrink: 0;
+}
+.profile-avatar-placeholder {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+.profile-info h2 { font-size: 1.4rem; margin-bottom: 6px; }
+.profile-info p  { color: var(--text-muted); font-size: 0.9rem; }
+
+/* ── Страница входа / регистрации ── */
+.auth-box {
+    max-width: 420px;
+    margin: 60px auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 32px;
+}
+.auth-box h2 {
+    margin-bottom: 24px;
+    font-size: 1.3rem;
+}
+
+/* ── Страница удаления ── */
+.confirm-box {
+    max-width: 480px;
+    margin: 60px auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 32px;
+    text-align: center;
+}
+.confirm-box h2 { margin-bottom: 12px; }
+.confirm-box p  { color: var(--text-muted); margin-bottom: 24px; }
+.confirm-box .actions { display: flex; gap: 12px; justify-content: center; }
+
+/* ── Заголовки ── */
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.page-subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* ── Пустое состояние ── */
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* ── Статистика ── */
+.stat-badge {
+    display: inline-block;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-right: 6px;
+}
+
+/* ── Адаптивность ── */
+@media (max-width: 600px) {
+    .navbar { padding: 0 16px; }
+    .container { padding: 20px 16px; }
+    .video-grid { grid-template-columns: 1fr; }
+    .profile-header { flex-direction: column; }
+}

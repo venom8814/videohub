@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.username }} — VideoHub{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <!-- Аватар -->
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Аватар" class="profile-avatar">
+    {% else %}
+        <div class="profile-avatar-placeholder">?</div>
+    {% endif %}
+
+    <div class="profile-info">
+        <h2>{{ profile_user.username }}</h2>
+        <p>На сайте с {{ profile_user.date_joined|date:"d.m.Y" }}</p>
+        {% if profile.bio %}
+        <p style="margin-top:8px;">{{ profile.bio }}</p>
+        {% endif %}
+        <p style="margin-top:8px;color:var(--text-muted);font-size:0.85rem;">
+            Видео: {{ videos.count }}
+        </p>
+        {% if user == profile_user %}
+        <a href="{% url 'profile_edit' %}" class="btn btn-secondary btn-sm" style="margin-top:10px;">
+            Редактировать профиль
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<h3 style="margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:8px;">
+    Видео пользователя
+</h3>
+
+{% if videos %}
+<div class="video-grid">
+    {% for video in videos %}
+    <a href="{% url 'video_detail' video.pk %}" style="text-decoration:none;color:inherit;">
+        <div class="video-card">
+            {% if video.thumbnail %}
+                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}" class="video-card__thumb">
+            {% else %}
+                <div class="video-card__thumb-placeholder">НЕТ ПРЕВЬЮ</div>
+            {% endif %}
+            <div class="video-card__body">
+                <div class="video-card__title">{{ video.title }}</div>
+                <div class="video-card__meta">
+                    <span>{{ video.views }} просм.</span>
+                    <span>{{ video.upload_date|date:"d.m.Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty">Пользователь ещё не загрузил ни одного видео.</div>
+{% endif %}
+{% endblock %}

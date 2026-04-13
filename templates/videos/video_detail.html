@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}{{ video.title }} — VideoHub{% endblock %}
+
+{% block content %}
+<!-- Видеоплеер -->
+<video class="video-player" controls preload="metadata">
+    <source src="{{ video.video_file.url }}">
+    Ваш браузер не поддерживает тег video.
+</video>
+
+<!-- Заголовок и мета -->
+<h1 class="video-detail__header">{{ video.title }}</h1>
+<div class="video-detail__meta">
+    Автор: <a href="{% url 'profile' username=video.author.username %}">{{ video.author.username }}</a>
+    &nbsp;|&nbsp; {{ video.upload_date|date:"d.m.Y H:i" }}
+    &nbsp;|&nbsp; {{ video.views }} просмотров
+</div>
+
+<!-- Реакции -->
+<div class="reactions">
+    {% if user.is_authenticated %}
+    <button class="btn-reaction {% if user_reaction == 'like' %}active-like{% endif %}"
+            data-type="like" data-url="{% url 'react_video' video.pk %}">
+        Нравится <span id="likes-count">{{ video.likes_count }}</span>
+    </button>
+    <button class="btn-reaction {% if user_reaction == 'dislike' %}active-dislike{% endif %}"
+            data-type="dislike" data-url="{% url 'react_video' video.pk %}">
+        Не нравится <span id="dislikes-count">{{ video.dislikes_count }}</span>
+    </button>
+    {% else %}
+    <span class="stat-badge">Нравится: {{ video.likes_count }}</span>
+    <span class="stat-badge">Не нравится: {{ video.dislikes_count }}</span>
+    <span style="font-size:0.82rem;color:var(--text-muted);">
+        <a href="{% url 'login' %}">Войдите</a>, чтобы оценить
+    </span>
+    {% endif %}
+
+    {% if user == video.author %}
+    &nbsp;
+    <a href="{% url 'video_delete' video.pk %}" class="btn btn-danger btn-sm">Удалить видео</a>
+    {% endif %}
+</div>
+
+<!-- Описание -->
+{% if video.description %}
+<div class="video-detail__description">{{ video.description }}</div>
+{% endif %}
+
+<!-- Комментарии -->
+<div class="comments-section">
+    <h3>Комментарии ({{ comments.count }})</h3>
+
+    {% if user.is_authenticated %}
+    <form method="post" style="margin-bottom:20px;">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ comment_form.text }}
+            {% if comment_form.text.errors %}
+            <div class="form-errors">{{ comment_form.text.errors }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">Отправить</button>
+    </form>
+    {% else %}
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">
+        <a href="{% url 'login' %}">Войдите</a>, чтобы оставить комментарий.
+    </p>
+    {% endif %}
+
+    {% if comments %}
+        {% for comment in comments %}
+        <div class="comment">
+            <div class="comment__author">
+                <a href="{% url 'profile' username=comment.author.username %}">{{ comment.author.username }}</a>
+                <span class="comment__time">{{ comment.created_at|date:"d.m.Y H:i" }}</span>
+            </div>
+            <div class="comment__text">{{ comment.text }}</div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty" style="padding:30px 0;">Комментариев пока нет.</div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Лайк / дизлайк через Fetch API (без перезагрузки страницы) ──
+document.querySelectorAll(".btn-reaction").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+        var reactionType = btn.dataset.type;
+        var url          = btn.dataset.url;
+        var csrfToken    = "{{ csrf_token }}";
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "reaction_type=" + reactionType
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.error) return;
+
+            // Обновляем счётчики
+            document.getElementById("likes-count").textContent    = data.likes;
+            document.getElementById("dislikes-count").textContent = data.dislikes;
+
+            // Сбрасываем активные классы
+            document.querySelectorAll(".btn-reaction").forEach(function(b) {
+                b.classList.remove("active-like", "active-dislike");
+            });
+
+            // Устанавливаем активный класс
+            if (data.reaction === "like") {
+                document.querySelector("[data-type='like']").classList.add("active-like");
+            } else if (data.reaction === "dislike") {
+                document.querySelector("[data-type='dislike']").classList.add("active-dislike");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

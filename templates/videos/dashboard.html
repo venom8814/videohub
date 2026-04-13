@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Мои видео — VideoHub{% endblock %}
+
+{% block content %}
+<div class="page-title">Мои видео</div>
+<div class="page-subtitle">
+    Загружено: {{ videos.count }}
+    &nbsp;|&nbsp;
+    <a href="{% url 'video_upload' %}" class="btn btn-primary btn-sm">Загрузить новое</a>
+</div>
+
+{% if videos %}
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Дата загрузки</th>
+            <th>Просмотры</th>
+            <th>Нравится</th>
+            <th>Не нравится</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for video in videos %}
+        <tr>
+            <td><a href="{% url 'video_detail' video.pk %}">{{ video.title }}</a></td>
+            <td>{{ video.upload_date|date:"d.m.Y H:i" }}</td>
+            <td>{{ video.views }}</td>
+            <td>{{ video.likes_count }}</td>
+            <td>{{ video.dislikes_count }}</td>
+            <td>
+                <a href="{% url 'video_detail' video.pk %}" class="btn btn-secondary btn-sm">Открыть</a>
+                <a href="{% url 'video_delete' video.pk %}" class="btn btn-danger btn-sm">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty">
+    У вас пока нет видео.
+    <br><a href="{% url 'video_upload' %}">Загрузить первое</a>
+</div>
+{% endif %}
+{% endblock %}
