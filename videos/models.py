@@ -1,11 +1,9 @@
-"""Модели приложения videos."""
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
 
 class Video(models.Model):
-    """Модель загруженного видео."""
 
     title       = models.CharField("Название", max_length=200)
     description = models.TextField("Описание", blank=True)
@@ -39,7 +37,6 @@ class Video(models.Model):
 
 
 class VideoReaction(models.Model):
-    """Лайк / дизлайк от пользователя на видео."""
 
     REACTION_CHOICES = [
         ("like",    "Лайк"),
@@ -51,7 +48,6 @@ class VideoReaction(models.Model):
     reaction_type = models.CharField("Тип реакции", max_length=10, choices=REACTION_CHOICES)
 
     class Meta:
-        # Один пользователь — одна реакция на одно видео
         unique_together = ("video", "user")
         verbose_name = "Реакция"
         verbose_name_plural = "Реакции"
@@ -61,7 +57,6 @@ class VideoReaction(models.Model):
 
 
 class Comment(models.Model):
-    """Комментарий под видео."""
 
     video      = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="comments")
     author     = models.ForeignKey(User,  on_delete=models.CASCADE, related_name="comments")
@@ -78,7 +73,6 @@ class Comment(models.Model):
 
 
 class VideoView(models.Model):
-    """Уникальный просмотр видео (один сеанс — один счёт)."""
 
     video      = models.ForeignKey(Video, on_delete=models.CASCADE, related_name="unique_views")
     session_id = models.CharField(max_length=40)

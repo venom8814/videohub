@@ -2,13 +2,11 @@
 {% block title %}{{ video.title }} — VideoHub{% endblock %}
 
 {% block content %}
-<!-- Видеоплеер -->
 <video class="video-player" controls preload="metadata">
     <source src="{{ video.video_file.url }}">
     Ваш браузер не поддерживает тег video.
 </video>
 
-<!-- Заголовок и мета -->
 <h1 class="video-detail__header">{{ video.title }}</h1>
 <div class="video-detail__meta">
     Автор: <a href="{% url 'profile' username=video.author.username %}">{{ video.author.username }}</a>
@@ -16,7 +14,6 @@
     &nbsp;|&nbsp; {{ video.views }} просмотров
 </div>
 
-<!-- Реакции -->
 <div class="reactions">
     {% if user.is_authenticated %}
     <button class="btn-reaction {% if user_reaction == 'like' %}active-like{% endif %}"
@@ -41,12 +38,10 @@
     {% endif %}
 </div>
 
-<!-- Описание -->
 {% if video.description %}
 <div class="video-detail__description">{{ video.description }}</div>
 {% endif %}
 
-<!-- Комментарии -->
 <div class="comments-section">
     <h3>Комментарии ({{ comments.count }})</h3>
 
@@ -85,7 +80,6 @@
 
 {% block extra_js %}
 <script>
-// ── Лайк / дизлайк через Fetch API (без перезагрузки страницы) ──
 document.querySelectorAll(".btn-reaction").forEach(function(btn) {
     btn.addEventListener("click", function() {
         var reactionType = btn.dataset.type;
@@ -104,16 +98,13 @@ document.querySelectorAll(".btn-reaction").forEach(function(btn) {
         .then(function(data) {
             if (data.error) return;
 
-            // Обновляем счётчики
             document.getElementById("likes-count").textContent    = data.likes;
             document.getElementById("dislikes-count").textContent = data.dislikes;
 
-            // Сбрасываем активные классы
             document.querySelectorAll(".btn-reaction").forEach(function(b) {
                 b.classList.remove("active-like", "active-dislike");
             });
 
-            // Устанавливаем активный класс
             if (data.reaction === "like") {
                 document.querySelector("[data-type='like']").classList.add("active-like");
             } else if (data.reaction === "dislike") {

@@ -9,7 +9,6 @@
 </head>
 <body>
 
-<!-- Навигационная панель -->
 <nav class="navbar">
     <a href="{% url 'home' %}" class="navbar__brand">VideoHub</a>
     <div class="navbar__links">
@@ -30,10 +29,8 @@
     </div>
 </nav>
 
-<!-- Основной контент -->
 <div class="container">
 
-    <!-- Сообщения Django (flash messages) -->
     {% if messages %}
     <ul class="messages">
         {% for message in messages %}

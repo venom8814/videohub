@@ -1,4 +1,3 @@
-"""Представления приложения users."""
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -10,11 +9,7 @@ from .models import Profile
 from videos.models import Video
 
 
-# ──────────────────────────────────────────────────────────
-# Регистрация
-# ──────────────────────────────────────────────────────────
 def register_view(request):
-    """Регистрация нового пользователя."""
     if request.user.is_authenticated:
         return redirect("home")
 
@@ -22,7 +17,6 @@ def register_view(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Создаём пустой профиль автоматически
             Profile.objects.create(user=user)
             login(request, user)
             messages.success(request, f"Добро пожаловать, {user.username}!")
@@ -33,11 +27,7 @@ def register_view(request):
     return render(request, "users/register.html", {"form": form})
 
 
-# ──────────────────────────────────────────────────────────
-# Вход
-# ──────────────────────────────────────────────────────────
 def login_view(request):
-    """Вход в систему."""
     if request.user.is_authenticated:
         return redirect("home")
 
@@ -54,25 +44,16 @@ def login_view(request):
     return render(request, "users/login.html", {"form": form})
 
 
-# ──────────────────────────────────────────────────────────
-# Выход
-# ──────────────────────────────────────────────────────────
 @login_required
 def logout_view(request):
-    """Выход из системы."""
     if request.method == "POST":
         logout(request)
         messages.info(request, "Вы вышли из системы.")
     return redirect("home")
 
 
-# ──────────────────────────────────────────────────────────
-# Профиль пользователя
-# ──────────────────────────────────────────────────────────
 def profile_view(request, username):
-    """Публичная страница профиля."""
     user   = get_object_or_404(User, username=username)
-    # Убеждаемся, что профиль существует
     profile, _ = Profile.objects.get_or_create(user=user)
     videos = Video.objects.filter(author=user).order_by("-upload_date")
 
@@ -83,12 +64,8 @@ def profile_view(request, username):
     })
 
 
-# ──────────────────────────────────────────────────────────
-# Редактирование профиля
-# ──────────────────────────────────────────────────────────
 @login_required
 def profile_edit(request):
-    """Редактирование собственного профиля."""
     profile, _ = Profile.objects.get_or_create(user=request.user)
 
     if request.method == "POST":

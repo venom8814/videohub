@@ -1,10 +1,8 @@
-"""Формы приложения videos."""
 from django import forms
 from .models import Video, Comment
 
 
 class VideoUploadForm(forms.ModelForm):
-    """Форма загрузки видео."""
 
     class Meta:
         model  = Video
@@ -31,7 +29,6 @@ class VideoUploadForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    """Форма добавления комментария."""
 
     class Meta:
         model  = Comment

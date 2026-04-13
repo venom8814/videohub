@@ -1,4 +1,3 @@
-"""Формы приложения users."""
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -6,7 +5,6 @@ from .models import Profile
 
 
 class RegisterForm(UserCreationForm):
-    """Форма регистрации нового пользователя."""
 
     email = forms.EmailField(
         required=True,
@@ -25,7 +23,6 @@ class RegisterForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    """Форма входа."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,7 +31,6 @@ class LoginForm(AuthenticationForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    """Форма редактирования профиля."""
 
     class Meta:
         model  = Profile
