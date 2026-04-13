@@ -5,7 +5,7 @@
 ## Установка и запуск
 
 ### 1. Клонируйте репозиторий
-git clone https://github.com/ВАШ_НИКНЕЙМ/videohub.git
+git clone https://github.com/venom8814/videohub.git
 cd videohub
 
 ### 2. Создайте виртуальное окружение
